@@ -78,7 +78,7 @@ for cols in qual01.columns[1:7]:
     qual01[cols + "_pct"] = qual01[cols].astype(float) / qual01["All people aged 16-74"].astype(float)
 #make df of pct change
 """
-job01 
+
 #save final file for later 
 data.to_csv(os.path.join('outputs', '20170416_cleaned.csv'))
 #Step 2 - Standardising/Normalising/Transforming

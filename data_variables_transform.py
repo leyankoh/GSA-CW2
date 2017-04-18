@@ -4,7 +4,7 @@ Created on Tue Apr 18 14:16:44 2017
 
 @author: Le Yan
 """
-
+import pysal as ps
 import pandas as pd
 import numpy as np 
 import matplotlib.pyplot as plt 
@@ -260,8 +260,42 @@ for k in range(3,10):
 
     plt.show()
 
-data_std.drop(list(data_std.columns[data_std.isnull().any().values].values), axis=1, inplace=True)
 #Silhouette analysis determines thatclusters higher than 5 tend not to be very robust.
 #3-5 are generally in the same range of optimal clustering
 #looking at the silhouette plots, it seems that 4 is the optimal number of clusters
 
+
+#6. k-means clustering
+gdf = gpd.read_file(os.path.join('Data','Lower_Layer_Super_Output_Areas_December_2011_Generalised_Clipped__Boundaries_in_England_and_Wales.shp'))
+gdf.set_index('lsoa11cd', drop=True, inplace=True)
+data_std.drop(list(data_std.columns[data_std.isnull().any().values].values), axis=1, inplace=True)
+
+
+k_pref = 4
+k_var  = 'KMeans' 
+
+kmeans = KMeans(n_clusters=k_pref).fit(data_std)
+data_std[k_var] = pd.Series(kmeans.labels_, index=data_std.index)
+
+sdf = gdf.join(data_std, how='inner')
+
+from pysal.contrib.viz import mapping as maps
+
+# Where will our shapefile be stored
+shp_link = os.path.join('outputs', 'lsoas_kde.shp')
+
+# Save it!
+sdf.to_file(shp_link)
+
+# And now re-load the values from the DBF file 
+# associated with the shapefile.
+values = np.array(ps.open(shp_link.replace('.shp','.dbf')).by_col(k_var))
+
+maps.plot_choropleth(shp_link, values, 'unique_values', 
+                     title='K-Means ' + str(k_pref) + ' Cluster Analysis', 
+                     savein=os.path.join('outputs', 'K-Means.png'), dpi=150, 
+                     figsize=(8,6), alpha=0.9
+                    )
+
+#save pickle for later analysis
+data_std.to_pickle(os.path.join("outputs","clusters.pickle"))
