@@ -8,10 +8,8 @@ Created on Sun Apr 16 14:03:05 2017
 import pandas as pd
 import numpy as np 
 import matplotlib.pyplot as plt 
-import pysal as ps 
 import seaborn as sns
 import os 
-import geopandas as gpd
 
 
 if os.path.isdir('outputs') is not True: #create directory for output images
@@ -65,6 +63,22 @@ for c in cols[0:]:        #convert to decimal proportion
     tenure_pct[c] = tenure_pct[c] / 100
 
 data = data.merge(tenure_pct, on='mnemonic')
+
+"""
+#Other possibly required variables: change in profession type and education levels in boroughs
+#1. qualifications 
+qual11 = pd.read_csv(os.path.join('Data', '246541426 - Qualifications.csv'), header=6, skip_blank_lines=True, engine='python')
+qual01 = pd.read_csv(os.path.join('Data', '246541426 - Qualifications 2001.csv'), header=5, skip_blank_lines=True, engine='python')
+#drop missing col from qual11
+qual11.drop(['Highest level of qualification: Apprenticeship'], axis=1, inplace=True)
+#calc prop. for qual10
+new_cols = ['No qual','level 1', 'level 2', 'level 3', 'level 4', 'other qual']
+qual01.rename(columns=dict(zip(qual01.columns[1:7], new_cols)), inplace=True) 
+for cols in qual01.columns[1:7]:
+    qual01[cols + "_pct"] = qual01[cols].astype(float) / qual01["All people aged 16-74"].astype(float)
+#make df of pct change
+"""
+job01 
 #save final file for later 
 data.to_csv(os.path.join('outputs', '20170416_cleaned.csv'))
 #Step 2 - Standardising/Normalising/Transforming
@@ -83,3 +97,4 @@ for c in data.columns.values:
     fig.savefig(os.path.join('outputs', "Untransformed-" + str(col_pos) + "." + nm + '.png'))
     plt.close(fig)
     col_pos += 1
+    
