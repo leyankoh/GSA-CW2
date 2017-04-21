@@ -54,3 +54,31 @@ for (x in dflist){
 x <- subset(x, select = -c(Group.1))
 }
 "
+
+#Now to do cluster profile analysis for SOM
+sommedian <- data.frame(aggregate(df[, 1:12], list(df$SOM), median))
+
+#here is where it gets tricky, but checking K-means and SOM profile on the map,
+#SOM Group 0 = Kmeans Group 1
+#SOM Group 1 = Kmeans Group 3
+#SOM Group 2 = Kmeans Group 2
+#SOM Group 3 = Kmeans Group 0
+#hence
+
+zerosom <- sommedian[4,] 
+onesom <- sommedian[1,] 
+twosom <- sommedian[3,] 
+threesom <- sommedian[2,] 
+
+zerosom <- subset(zerosom, select = -c(Group.1))
+onesom <- subset(onesom, select = -c(Group.1))
+twosom <- subset(twosom, select = -c(Group.1))
+threesom <- subset(threesom, select = -c(Group.1))
+
+par(ps=10) #set font size
+radial.plot(zerosom, labels=label.names,rp.type="p",main="SOM Group 0", radial.lim=c(-2, 3),line.col="blue")
+radial.plot(onesom, labels=label.names,rp.type="p",main="SOM Group 1", radial.lim=c(-2, 3),line.col="blue")
+radial.plot(twosom, labels=label.names,rp.type="p",main="SOM Group 2", radial.lim=c(-2, 3),line.col="blue")
+radial.plot(threesom, labels=label.names,rp.type="p",main="SOM Group 3", radial.lim=c(-2, 3),line.col="blue")
+
+
