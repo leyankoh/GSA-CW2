@@ -424,3 +424,5 @@ maps.plot_choropleth(shp_link, values, 'unique_values',
                      savein=os.path.join('outputs', s_var + '.png'), dpi=150, 
                      figsize=(8,6), alpha=0.9
                     )
+
+data_std.to_pickle(os.path.join("outputs","clusters_updated.pickle"))
