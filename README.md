@@ -11,6 +11,7 @@ The following map was then produced from all the data:
 R was used to create radial plots that could then be used to tease out the characteristics of each group demographics were sorted into. 
 
 Examples: 
+
 ![KDE group 0](https://i.imgur.com/knj8rMI.png)
 
 ![KDE group 1](https://i.imgur.com/n9MsmsK.png)
